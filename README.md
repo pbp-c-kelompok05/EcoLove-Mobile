@@ -56,3 +56,7 @@ Daftar Modul & PIC:
     Item = Karen Lim (2506623982)
     Review = Sayyid Aqil Kusuma (2506596331)
     Transaction+Payment = Maurilla Maharani Nur Abdul (2506588374)
+
+
+Link Figma:
+    https://www.figma.com/design/iqNqWjLpHtqI7QjbV63KtU/EcoLove-%E2%80%94-Revised-Design?node-id=1-4256&p=f
