@@ -59,4 +59,5 @@ Daftar Modul & PIC:
 
 
 Link Figma:
-    https://www.figma.com/design/iqNqWjLpHtqI7QjbV63KtU/EcoLove-%E2%80%94-Revised-Design?node-id=1-4256&p=f
+    https://www.figma.com/design/iqNqWjLpHtqI7QjbV63KtU/EcoLove-%E2%80%94-Revised-Design?node-id=1-4256&p=f 
+    
