@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ecolove/reviews/models.dart';
+import 'package:ecolove/features/reviews/models.dart';
 
 class ReviewBubble extends StatefulWidget {
   final Review review;

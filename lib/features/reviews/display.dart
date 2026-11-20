@@ -1,6 +1,6 @@
-import 'package:ecolove/reviews/models.dart';
+import 'package:ecolove/features/reviews/models.dart';
 import 'package:flutter/material.dart';
-import 'package:ecolove/reviews/widgets.dart';
+import 'package:ecolove/features/reviews/widgets.dart';
 
 class ReviewSection extends StatelessWidget {
   const ReviewSection({super.key});
