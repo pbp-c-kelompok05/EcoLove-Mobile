@@ -113,3 +113,7 @@ Untuk memastikan sinkronisasi data secara *real-time* antara aplikasi *web* **Ec
 
 * **Sumber Public API:** [API Wilayah Indonesia (emsifa)](https://github.com/emsifa/api-wilayah-indonesia.git)
 * **Link Desain Figma:** [EcoLove — Revised Design](https://www.figma.com/design/iqNqWjLpHtqI7QjbV63KtU/EcoLove-%E2%80%94-Revised-Design?node-id=1-4256&p=f)
+Link Figma:
+    https://www.figma.com/design/iqNqWjLpHtqI7QjbV63KtU/EcoLove-%E2%80%94-Revised-Design?node-id=1-4256&p=f
+
+    
