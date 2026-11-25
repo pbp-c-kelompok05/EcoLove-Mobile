@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../auth/presentation/pages/login_page.dart';
+import '../../items/screens/marketplace_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -32,9 +33,8 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void _openLogin() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => const LoginPage()));
   }
 
   @override
@@ -105,7 +105,13 @@ class _LandingPageState extends State<LandingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _navItem('Home', () => _goTo(_homeKey)),
-              _navItem('Marketplace', () => _goTo(_marketplaceKey)),
+              _navItem('Marketplace', () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const MarketplacePage(),
+                  ),
+                );
+              }),
               _navItem('Events', () => _goTo(_eventsKey)),
               _navItem('Education', () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -219,7 +225,13 @@ class _LandingPageState extends State<LandingPage> {
                 _heroButton(
                   label: 'EXPLORE MARKETPLACE',
                   filled: true,
-                  onTap: () => _goTo(_marketplaceKey),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const MarketplacePage(),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
                 _heroButton(
@@ -252,9 +264,7 @@ class _LandingPageState extends State<LandingPage> {
             color: filled ? green : Colors.white.withOpacity(0.75),
             width: 1,
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           padding: const EdgeInsets.symmetric(horizontal: 14),
         ),
         child: Row(
@@ -277,12 +287,24 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _buildMarketplace() {
     final products = <_Product>[
-      const _Product('assets/images/product_jacket.jpg', 'Pre-loved denim jacket'),
+      const _Product(
+        'assets/images/product_jacket.jpg',
+        'Pre-loved denim jacket',
+      ),
       const _Product('assets/images/product_necklace.jpg', 'Upcycled necklace'),
       const _Product('assets/images/product_bag.jpg', 'Denim tote bag'),
-      const _Product('assets/images/product_recycled_cube.jpg', 'Recycled craft'),
-      const _Product('assets/images/product_woven_bag.jpg', 'Woven recycled bag'),
-      const _Product('assets/images/product_upcycled_art.jpg', 'Upcycled decor'),
+      const _Product(
+        'assets/images/product_recycled_cube.jpg',
+        'Recycled craft',
+      ),
+      const _Product(
+        'assets/images/product_woven_bag.jpg',
+        'Woven recycled bag',
+      ),
+      const _Product(
+        'assets/images/product_upcycled_art.jpg',
+        'Upcycled decor',
+      ),
     ];
 
     return Container(
@@ -292,11 +314,7 @@ class _LandingPageState extends State<LandingPage> {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-          Positioned(
-            top: 0,
-            left: -5,
-            child: _outlineWord('LOVE AGAIN', 76),
-          ),
+          Positioned(top: 0, left: -5, child: _outlineWord('LOVE AGAIN', 76)),
           Positioned(
             bottom: 0,
             left: -5,
@@ -449,11 +467,7 @@ class _LandingPageState extends State<LandingPage> {
           const SizedBox(height: 7),
           const Text(
             'Find events that help you live more\nsustainably.',
-            style: TextStyle(
-              color: Colors.black87,
-              fontSize: 15,
-              height: 1.55,
-            ),
+            style: TextStyle(color: Colors.black87, fontSize: 15, height: 1.55),
           ),
           const SizedBox(height: 36),
           ...events.map(
@@ -480,11 +494,7 @@ class _LandingPageState extends State<LandingPage> {
       child: const Text(
         '© 2026 EcoLove. Faculty of Computer Science,\nUniversity of Indonesia.',
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 11,
-          height: 1.5,
-        ),
+        style: TextStyle(color: Colors.white, fontSize: 11, height: 1.5),
       ),
     );
   }
