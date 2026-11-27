@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../auth/presentation/pages/login_page.dart';
 import '../../items/screens/marketplace_page.dart';
+import '../../education/presentation/pages/education_page.dart';
+import '../../events/presentation/pages/events_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -35,6 +37,18 @@ class _LandingPageState extends State<LandingPage> {
   void _openLogin() {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (_) => const LoginPage()));
+  }
+
+  void _openEvents() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const EventsPage()),
+    );
+  }
+
+  void _openEducation() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const EducationPage()),
+    );
   }
 
   @override
@@ -112,12 +126,8 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 );
               }),
-              _navItem('Events', () => _goTo(_eventsKey)),
-              _navItem('Education', () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Halaman Education menyusul.')),
-                );
-              }),
+              _navItem('Events', _openEvents),
+              _navItem('Education', _openEducation),
             ],
           ),
           const SizedBox(height: 12),
