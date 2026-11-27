@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import '../config/api_config.dart';
+import '../models/item_model.dart';
 
 class ItemFormPage extends StatefulWidget {
-  final Map<String, dynamic>? initialData;
+  final Item? initialItem;
 
-  const ItemFormPage({super.key, this.initialData});
+  const ItemFormPage({super.key, this.initialItem});
 
   @override
   State<ItemFormPage> createState() => _ItemFormPageState();
@@ -14,7 +19,9 @@ class _ItemFormPageState extends State<ItemFormPage> {
   late String _name;
   late String _price;
   late String _description;
+  late String _imageUrl;
   String _selectedCategory = 'Fashion';
+  bool _isLoading = false;
 
   final List<String> _categories = [
     'Fashion',
@@ -27,23 +34,75 @@ class _ItemFormPageState extends State<ItemFormPage> {
   @override
   void initState() {
     super.initState();
-    _name = widget.initialData?['name'] ?? '';
-    _price = widget.initialData?['price']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '';
-    _description = widget.initialData?['description'] ?? '';
-    if (widget.initialData?['category'] != null &&
-        _categories.contains(widget.initialData!['category'])) {
-      _selectedCategory = widget.initialData!['category'];
+    _name = widget.initialItem?.name ?? '';
+    _price = widget.initialItem?.price.toString() ?? '';
+    _description = widget.initialItem?.description ?? '';
+    _imageUrl = widget.initialItem?.image ?? '';
+    if (widget.initialItem?.category != null &&
+        _categories.contains(widget.initialItem!.category)) {
+      _selectedCategory = widget.initialItem!.category;
+    }
+  }
+
+  Future<void> _submitForm(CookieRequest request) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    final isEdit = widget.initialItem != null;
+
+    final url = isEdit
+    ? '${ApiConfig.baseUrl}/marketplace/edit/${widget.initialItem!.id}/'
+    : '${ApiConfig.baseUrl}/marketplace/add/';
+
+    try {
+      final response = await request.postJson(
+        url,
+        jsonEncode({
+          'name': _name,
+          'price': int.tryParse(_price) ?? 0,
+          'category': _selectedCategory,
+          'description': _description,
+          'image': _imageUrl,
+        }),
+      );
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+
+      if (response['status'] == 'success' || response['id'] != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              isEdit
+                  ? 'Perubahan "$_name" berhasil disimpan!'
+                  : 'Barang "$_name" berhasil ditambahkan!',
+            ),
+          ),
+        );
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'] ?? 'Gagal menyimpan barang.')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isEdit = widget.initialData != null;
+    final request = context.watch<CookieRequest>();
+    final isEdit = widget.initialItem != null;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(isEdit ? 'Edit Barang' : 'Tambah Barang Baru'),
-        backgroundColor: Colors.green[700],
+        backgroundColor: const Color(0xFF287D35),
         foregroundColor: Colors.white,
       ),
       body: Form(
@@ -72,8 +131,11 @@ class _ItemFormPageState extends State<ItemFormPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) => _price = value,
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? 'Harga wajib diisi' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Harga wajib diisi';
+                  if (int.tryParse(value) == null) return 'Harga harus berupa angka';
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
@@ -91,6 +153,15 @@ class _ItemFormPageState extends State<ItemFormPage> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                initialValue: _imageUrl,
+                decoration: const InputDecoration(
+                  labelText: 'URL Gambar (Opsional)',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => _imageUrl = value,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
                 initialValue: _description,
                 maxLines: 3,
                 decoration: const InputDecoration(
@@ -104,25 +175,18 @@ class _ItemFormPageState extends State<ItemFormPage> {
               const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[700],
+                  backgroundColor: const Color(0xFF287D35),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          isEdit
-                              ? 'Perubahan "$_name" disimpan!'
-                              : 'Barang "$_name" berhasil ditambahkan!',
-                        ),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text(isEdit ? 'Simpan Perubahan' : 'Simpan Barang'),
+                onPressed: _isLoading ? null : () => _submitForm(request),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                      )
+                    : Text(isEdit ? 'Simpan Perubahan' : 'Simpan Barang'),
               ),
             ],
           ),
